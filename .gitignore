@@ -1,0 +1,6 @@
+# Default
+/vendor
+/node_modules
+/resources
+/public/content
+npm-debug.log

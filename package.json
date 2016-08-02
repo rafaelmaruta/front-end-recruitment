@@ -1,0 +1,26 @@
+﻿{
+  "name": "Teste-Maruta",
+  "version": "1.0.0",
+  "description": "Teste de Front-End do Maruta para a Netshoes",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "grunt"
+  },
+  "repository": "https://github.com/netshoes/front-end-recruitment.git",
+  "author": "Rafael Maruta",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~1.0.x",
+    "grunt-browser-sync": "^2.0.0",
+    "grunt-contrib-concat": "~0.5.x",
+    "grunt-contrib-csslint": "^0.4.0",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-less": "^1.0.0",
+    "grunt-contrib-uglify": "~0.8.x",
+    "grunt-contrib-watch": "~0.6.x",
+    "grunt-remove-logging": "^0.2.0",
+    "grunt-spritesmith": "^4.5.0",
+    "matchdep": "~0.1.x"
+  }
+}
