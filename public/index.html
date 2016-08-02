@@ -1,10 +1,58 @@
 <!DOCTYPE html>
 <head>
-	<title>Teste Rafael Maruta para Netshoes</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Teste Rafael Maruta - Front-End Recruitment</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="css/less/netshoes.css" />
 	<!--link rel="stylesheet" type="text/css" href="css/netshoes.min.css" /-->
 </head>
 <body>
-	<div class="teste">Ola</div>
+	<div id="container">
+		<section id="products">
+			<ul class="row">
+				<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
+					<a href="#" title="Chuteira Nike">
+						<figure>
+							<img src="content/foto1.jpg" alt="Chuteira Nike" />
+							<figcaption>Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
+						</figure>
+						<p class="price">R$ <span>149</span>,90</p>
+						<p class="installments">ou 3 x <span>R$ 25,00</span></p>
+					</a>
+				</li>
+			</ul>
+		</section>
+		<aside id="cart">
+			<h3><span class="bag">3</span>Sacola</h3>
+			<ul>
+				<li class="col-xs-12">
+					<div class="start-xs">
+						<figure>
+							<img src="content/foto1.jpg" alt="Chuteira Nike" />
+						</figure>
+						<h4>Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</h4>
+						<p class="size">GG | Preto e branco</p>
+						<p class="quantity">Quantidade: 2</p>
+						</div>
+					</div>
+					<div class="end-xs">
+						<a href="#" class="ico-close">X</a>
+						<p class="price">R$ <span>149</span>,90</p>
+					</div>
+				</li>
+				<li class="col-xs-12">
+					<div class="col-xs-12">
+						<p class="subtotal start-xs">Subtotal</p>
+						<div class="end-xs">
+							<p class="total-price">R$ <span>379,70</span></p>
+							<p class="total-installments">ou em até 10 X <span>R$ 37,97</span></p>
+						</div>
+					</div>
+					<input type="submit" class="col-xs-12" value="Comprar" />
+				</li>
+			</ul>
+		</aside>
+	</div>
 </body>
 </html>

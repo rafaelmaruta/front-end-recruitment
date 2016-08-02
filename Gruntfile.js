@@ -220,7 +220,7 @@ module.exports = function(grunt) {
 
                 options: {
                     watchTask: true,
-                    proxy: "www.netshoes.estadao.com.br"
+                    proxy: "www.netshoes.com.br"
                 },
                 bsFiles: {
                     injectChanges: false,

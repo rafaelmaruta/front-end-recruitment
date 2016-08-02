@@ -1,7 +1,7 @@
 ﻿{
   "name": "Teste-Maruta",
   "version": "1.0.0",
-  "description": "Teste de Front-End do Maruta para a Netshoes",
+  "description": "Teste Rafael Maruta - Front-End Recruitment",
   "main": "script.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
