@@ -6,7 +6,6 @@
 	right: 0;
 	position: absolute;
 	top: 0;
-	width: 66%;
 
 	.cart-title {
 		.open-sans-bold();
@@ -37,6 +36,20 @@
 			&:hover {
 				background-color: @darker-gray;
 
+				.close {
+					color: white;
+				}
+			}
+			&.delete {
+				background-color: @darker-gray;
+
+				.thumb {
+					.opacity(0.5);
+				}
+				.title, .size, .quantity, .price {
+					.opacity(0.2);
+					text-decoration: line-through;
+				}
 				.close {
 					color: white;
 				}
