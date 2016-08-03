@@ -75,15 +75,6 @@
 	text-overflow: ellipsis;
 }
 
-/*
-.transition (@transition) {
-	-webkit-transition: @transition;  
-	-moz-transition:    @transition;
-	-ms-transition:     @transition; 
-	-o-transition:      @transition;  
-}
-*/
-
 .transition {
 	-webkit-transition: all @timer ease;
 	-moz-transition: all @timer ease;
@@ -95,4 +86,25 @@
 .filter (@effects) {
     -webkit-filter: @effects;
     filter: @effects;
+}
+
+//Fonts
+.open-sans-light() {
+	font-family: @open-sans;
+	font-weight: 300;
+}
+
+.open-sans-regular() {
+	font-family: @open-sans;
+	font-weight: 400;
+}
+
+.open-sans-semi-bold() {
+	font-family: @open-sans;
+	font-weight: 600;
+}
+
+.open-sans-bold() {
+	font-family: @open-sans;
+	font-weight: 700;
 }

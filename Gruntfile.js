@@ -179,7 +179,6 @@ module.exports = function(grunt) {
         },
 
         // Watch
-
         watch: {
             options: {
                 livereload: true
@@ -213,7 +212,7 @@ module.exports = function(grunt) {
             },
         },
 
-        //browserSync - Sincroniza desktop e mobile
+        //browserSync
         browserSync: {
 
             netshoes: {
@@ -234,8 +233,7 @@ module.exports = function(grunt) {
         }
     });
 
-    // Agora que temos carregado a package.json e os node_modules vamos definir o caminho de base
-    // Para a execução efectiva das tarefas
+    // Execução de tarefas
     grunt.registerTask("build", ["sprite","less:dev","less:prod","js"]);
     grunt.registerTask("w", ["build","watch"]);
     grunt.registerTask("css", ["less"]);
