@@ -12,17 +12,17 @@ module.exports = function(grunt) {
             base      : "./",
 
             css       : {
-                src   : "./public/css/less",
-                dest  : "./public/css/"                
+                src   : "./css/less",
+                dest  : "./css/"                
                 },
             js        : {
-                src   : "./public/js/src",
-                dest  : "./public/js",
-                temp  : "./public/js/src/_temp"
+                src   : "./js/src",
+                dest  : "./js",
+                temp  : "./js/src/_temp"
 
             },
-            img       : "./public/img",
-            raiz_static  : "/public"
+            img       : "./img"
+            
         },
 
         jshint: {
@@ -43,29 +43,29 @@ module.exports = function(grunt) {
                 },
             frameworks: { 
                 src       : [
-                    "<%= dirs.js.src %>/plugins/zepto.min.js",
-                    "<%= dirs.js.src %>/plugins/zepto-fx_methods.js"
+                    "<%= dirs.js.src %>/plugins/zepto.min.js"
+                    //"<%= dirs.js.src %>/bower_components/react/react.min.js",
+                    //"<%= dirs.js.src %>/bower_components/react/react.dom.min.js"
                 ],
                 dest      : "<%= dirs.js.src %>/frameworks.js"  
             },
-            netshoes: {
+            /*netshoes: {
                 src       : [
-                    "<%= dirs.js.src %>/plugins/swiper/3.3.1/swiper.min.js",
                     "<%= dirs.js.src %>/app*.js"
                 ],
                 dest      : "<%= dirs.js.src %>/netshoes.js"
-            }
+            }*/
         },
 
         //Minificar JS
         uglify: {
 
-            options                 : {
+            /*options                 : {
 
                 mangle              : {
                     except          : ["Swiper", "Zepto"] //no Array abaixo, podemos ignorar algumas variaveis.
                 }
-            },
+            },*/
             prod                    : {
                 options             : {
                     banner          : "/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today('yyyy-mm-dd') %> */",
@@ -172,8 +172,8 @@ module.exports = function(grunt) {
                 dest            : "<%= dirs.img %>/netshoes-sprite.png",
                 retinaDest      : "<%= dirs.img %>/netshoes-sprite@2x.png",
                 destCss         : "<%= dirs.css.src %>/sprites.less",
-                imgPath         : "<%= dirs.raiz_static %>/img/netshoes-sprite.png",
-                retinaImgPath   : "<%= dirs.raiz_static %>/img/netshoes-sprite@2x.png",
+                imgPath         : "<%= dirs.img %>/netshoes-sprite.png",
+                retinaImgPath   : "<%= dirs.img %>/netshoes-sprite@2x.png",
                 padding         : 5
             }
         },
@@ -237,6 +237,7 @@ module.exports = function(grunt) {
     grunt.registerTask("build", ["sprite","less:dev","less:prod","js"]);
     grunt.registerTask("w", ["build","watch"]);
     grunt.registerTask("css", ["less"]);
+    grunt.registerTask("frameworks", ["concat:frameworks"]);
     grunt.registerTask("js", ["removelogging","uglify"]);
     grunt.registerTask("default", ["build"]);
 }

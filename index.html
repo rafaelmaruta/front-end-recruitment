@@ -1,10 +1,217 @@
 <!DOCTYPE html>
 <head>
-	<title>Teste Rafael Maruta para Netshoes</title>
-	<link rel="stylesheet" type="text/css" href="css/less/netshoes.css" />
-	<!--link rel="stylesheet" type="text/css" href="css/netshoes.min.css" /-->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Teste Rafael Maruta - Front-End Recruitment</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+	<!--link rel="stylesheet" type="text/css" href="css/less/netshoes.css" /-->
+	<link rel="stylesheet" type="text/css" href="css/netshoes.min.css" />
+	<script src="js/zepto.min.js"></script>
+	<script src="js/bower_components/react/react.min.js"></script>
+	<script src="js/bower_components/react/react-dom.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+	<script type="text/babel">
+
+	function toSeo(palavra) {
+		var com_acento = 'áàãâäéèêëíìîïóòõôöúùûüçÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÖÔÚÙÛÜÇ/',
+			sem_acento = 'aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC-',
+			nova = '';
+
+		for (var i = 0; i < palavra.length; i++) {
+			if (com_acento.search(palavra.substr(i,1)) >= 0) {
+				nova += sem_acento.substr(com_acento.search(palavra.substr(i,1)),1);
+			} else {
+				nova += palavra.substr(i,1);
+			};
+		}
+		return nova.toLowerCase().replace(/ /g, "-");
+	};
+
+	var formatPrice = {
+		getObject: function(price) {
+			price = price.toFixed(2).toString().split('.');
+			return {int: price[0], float: price[1]};
+		},
+		getInstallment: function(installments, price) {
+			return installments > 1 ? (price / installments).toFixed(2).replace('.', ',') : '';
+		}
+	};
+
+	var Shopping = React.createClass({
+		getInitialState: function() {
+			return {data: []};
+		},
+		componentWillMount: function() {
+			var self = this;
+
+			$.getJSON('data/products.json', function(data) {
+				console.log(data.products);
+				self.setState({data: data.products})
+			});
+		},
+		render: function() {
+			return (
+				<section id="products" className="col-xs-12">
+					<ProductsTable data={this.state.data} />
+				</section>
+			);
+		}
+	});
+
+	var ProductInstallment = React.createClass({
+		componentWillMount: function() {
+			var product = this.props.data,
+				installment = formatPrice.getInstallment(product.installments, product.price);
+			this.setState({data: installment});
+		},
+		render: function() {
+			return <p className="installments">ou {this.props.data.installments} x <strong>R$ {this.state.data}</strong></p>
+		}
+
+	});
+
+	var ProductsTable = React.createClass({
+		render: function() {
+			var productNodes = this.props.data.map(function (product) {
+
+				var image = 'content/' + toSeo(product.title) + '.jpg',
+					price = formatPrice.getObject(product.price);
+
+	            return (
+					<li className="col-md-4 col-sm-6 col-xs-12 center-xs">
+		            	<a href="#" title={product.title}>
+							<figure>
+								<img src={image} alt={product.title} />
+								<figcaption className="description">{product.title}</figcaption>
+							</figure>
+							<p className="price">R$ <strong>{price.int}</strong>,{price.float}</p>
+							<ProductInstallment data={product} />
+						</a>
+					</li>
+	            ); 
+	        });
+
+			return (
+				<ul className="row">
+					{productNodes}
+				</ul>
+			);
+		}
+	});
+	
+	ReactDOM.render(
+		<Shopping />,
+		document.getElementById('container')
+	);
+	</script>
 </head>
-<body>
-	<div class="teste">Ola</div>
+<body class="col-xs-12">
+	<div class="row center-xs">
+		<div id="container">
+			<!--section id="products" class="col-xs-12">
+				<ul class="row">
+					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
+						<a href="#" title="Chuteira Nike">
+							<figure>
+								<img src="content/foto1.jpg" alt="Chuteira Nike" />
+								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
+							</figure>
+							<p class="price">R$ <strong>149</strong>,90</p>
+							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
+						</a>
+					</li>
+					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
+						<a href="#" title="Chuteira Nike">
+							<figure>
+								<img src="content/foto1.jpg" alt="Chuteira Nike" />
+								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
+							</figure>
+							<p class="price">R$ <strong>49</strong>,90</p>
+							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
+						</a>
+					</li>
+					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
+						<a href="#" title="Chuteira Nike">
+							<figure>
+								<img src="content/foto1.jpg" alt="Chuteira Nike" />
+								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
+							</figure>
+							<p class="price">R$ <strong>9</strong>,90</p>
+							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
+						</a>
+					</li>
+					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
+						<a href="#" title="Chuteira Nike">
+							<figure>
+								<img src="content/foto1.jpg" alt="Chuteira Nike" />
+								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
+							</figure>
+							<p class="price">R$ <strong>149</strong>,90</p>
+							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
+						</a>
+					</li>
+					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
+						<a href="#" title="Chuteira Nike">
+							<figure>
+								<img src="content/foto1.jpg" alt="Chuteira Nike" />
+								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
+							</figure>
+							<p class="price">R$ <strong>149</strong>,90</p>
+							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
+						</a>
+					</li>
+
+				</ul>
+			</section>
+			<aside id="cart" class="col-sm-12 col-md-8">
+				<h3 class="cart-title"><span class="bag">3</span>Sacola</h3>
+				<ul>
+					<li class="row middle-xs delete">
+						<hr>
+						<div class="col-xs-9 start-xs">
+							<figure class="thumb">
+								<img src="content/foto1-thumb.jpg" alt="Chuteira Nike" />
+							</figure>
+							<h4 class="title">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</h4>
+							<p class="size">GG | Preto e branco</p>
+							<p class="quantity">Quantidade: 2</p>
+						</div>
+						<div class="col-xs-3 end-xs">
+							<a href="#" class="close ico-cancel33"></a>
+							<p class="price">R$ <strong>149</strong>,90</p>
+						</div>
+					</li>
+					<li class="row middle-xs">
+						<hr>
+						<div class="col-xs-9 start-xs">
+							<figure class="thumb">
+								<img src="content/foto1-thumb.jpg" alt="Chuteira Nike" />
+							</figure>
+							<h4 class="title">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</h4>
+							<p class="size">GG | Preto e branco</p>
+							<p class="quantity">Quantidade: 2</p>
+						</div>
+						<div class="col-xs-3 end-xs">
+							<a href="#" class="close ico-cancel33"></a>
+							<p class="price">R$ <strong>149</strong>,90</p>
+						</div>
+					</li>
+					<li class="row conclude">
+						<hr>
+						<p class="subtotal col-xs-6 start-xs">Subtotal</p>
+						<div class="col-xs-6 end-xs">
+							<p class="total-price">R$ <strong>379</strong>,70</p>
+							<p class="total-installments">ou em até 10 X <strong>R$ 37,97</strong></p>
+						</div>
+						<div class="col-xs-12 btn-buy-container">
+							<input type="submit" class="btn-buy" value="Comprar" />
+						</div>
+					</li>
+				</ul>
+			</aside-->
+		</div>
+	</div>
+	
 </body>
 </html>
