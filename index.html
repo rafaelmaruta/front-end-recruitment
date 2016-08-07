@@ -5,34 +5,46 @@
 	<title>Teste Rafael Maruta - Front-End Recruitment</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
-	<!--link rel="stylesheet" type="text/css" href="css/less/netshoes.css" /-->
 	<link rel="stylesheet" type="text/css" href="css/netshoes.min.css" />
 	<script src="js/zepto.min.js"></script>
 	<script src="js/bower_components/react/react.min.js"></script>
 	<script src="js/bower_components/react/react-dom.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+</head>
+<body class="col-xs-12">
+	<div class="row center-xs">
+		<div id="container"></div>
+	</div>
+
 	<script type="text/babel">
+	/*var React = require('react');
+	var ReactDOM = require('react-dom');*/
 
-	const dir_content = 'content/',
-		url_json = 'data/products.json';
+	var config = {
+		currencyFormat    : 'R$',
+		dir_content       : 'content/',
+		url_json          : 'data/products.json',
+		url_submit        : '/',
+		total_installments: 10
+	};
 
-	function toSeo(str) {
+	String.prototype.toSeo = function() {
 		var with_accent = 'áàãâäéèêëíìîïóòõôöúùûüçÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÖÔÚÙÛÜÇ/',
-			no_accent = 'aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC-',
-			new_str = '';
+			no_accent   = 'aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC-',
+			new_str     = '';
 
-		for (var i = 0; i < str.length; i++) {
-			if (with_accent.search(str.substr(i, 1)) >= 0) {
-				new_str += no_accent.substr(with_accent.search(str.substr(i, 1)), 1);
+		for (var i = 0; i < this.length; i++) {
+			if (with_accent.search(this.substr(i, 1)) >= 0) {
+				new_str += no_accent.substr(with_accent.search(this.substr(i, 1)), 1);
 			} else {
-				new_str += str.substr(i, 1);
+				new_str += this.substr(i, 1);
 			};
 		};
 		return new_str.toLowerCase().replace(/ /g, "-");
 	};
 
 	var formatPrice = {
-		getObject: function(price) {
+		getSplit: function(price) {
 			price = price.toFixed(2).toString().split('.');
 			return {int: price[0], float: price[1]};
 		},
@@ -43,173 +55,250 @@
 
 	var ProductsTable = React.createClass({
 		getInitialState: function() {
-			return {products: []};
+			return {
+				cartClass    : [],
+				list         : {},
+				products     : [],
+				productsCart : [],
+				totalQuantity: [],
+				totalPrice   : 0
+			};
 		},
-		componentWillMount: function() {
-			var self = this;
+		componentDidMount: function() {
+			$.getJSON(config.url_json, function(data) {
+				this.setState({products: data.products});
+				if (localStorage.getItem('productList') !== null) {
+					this.storagedProductsCart();
+				};
+			}.bind(this));
+		},
+		storagedProductsCart: function() {
+			this.setState({list: JSON.parse(localStorage.getItem('productList'))});
+			$.each(this.state.list, function(idx, elem) {
+				/*this.state.productsCart.push(this.state.products);
+				this.setState({products: this.state.products});*/
 
-			$.getJSON(url_json, function(data) {
-				//console.log(data);
-				self.setState({products: data.products})
-			});
+				var index = this.state.products.findIndex(function(product) {
+					return product.id == idx.replace('p-', '');
+				});
+
+				this.state.productsCart.push(this.state.products[index]);
+				this.setState({products: this.state.products, cartClass: 'open'});
+				// Recalculates the total purchase
+				this.calcTotal();
+			}.bind(this));
 		},
 		addToCart: function(id) {
 			event.preventDefault();
-			this.setState({product: this.state.products[id]});
+			// Returns the product array index based on its product id
+			var index = this.state.products.findIndex(function(product) {
+				return product.id == id;
+			});
+			var product = this.state.products[index];
+
+			if (this.state.productsCart.indexOf(product) == -1) {
+				this.state.list['p-' + product.id] = 1;
+				this.state.productsCart.push(product);
+				this.setState({products: this.state.products});
+			} else {
+				this.state.list['p-' + product.id]++;
+				this.setState({list: this.state.list});
+			};
+			this.setState({cartClass: 'open'});
+			// Recalculates the total purchase
+			this.calcTotal();
+		},
+		removeFromCart: function(id) {
+			event.preventDefault();
+			// Decreases the product quantity
+			this.state.list['p-' + id]--;
+			// If the product quantity is equal to zero
+			if (this.state.list['p-' + id] == 0) {
+				// If the product quantity is equal to zero, removes its array key from the state list
+				delete this.state.list['p-' + id];
+				// Returns the product array index based on its product id
+				var index = this.state.productsCart.findIndex(function(product) {
+					return product.id == id;
+				});
+				// If the product quantity is equal to zero, removes its array key from the product list
+				this.state.productsCart.splice(index, 1);
+			};
+			// Sets the new list state
+			this.setState({list: this.state.list});
+			// Recalculates the total purchase
+			this.calcTotal();
+		},
+		calcTotal: function() {
+			var totalPrice    = 0,
+				totalQuantity = 0;
+
+			// Saves the product list in a local storage
+			localStorage.setItem('productList', JSON.stringify(this.state.list));
+
+			this.state.productsCart.forEach(function(elem) {
+				totalPrice    += elem['price'] * this.state.list['p-' + elem['id']];
+				totalQuantity += this.state.list['p-' + elem['id']];
+			}.bind(this));
+
+			this.setState({
+				totalPrice   : totalPrice,
+				totalQuantity: totalQuantity
+			});
+		},
+		submitPurchase: function() {
+			event.preventDefault();
+			$.post(config.url_submit, {products: this.state.products, list: this.state.list}, function(e) {
+				console.log('Submit message:', e);
+			});
+		},
+		cartMouseLeave: function() {
+			this.setState({cartClass: 'closed'});
+		},
+		cartMouseMove: function(e) {
+			var tempX = -(e.clientX - $('#products').offset().left - $('#products').width());
+			if (tempX <=  30) {
+				this.setState({cartClass: 'open'});
+			};
 		},
 		render: function() {
-			var self = this,
-				productRows = this.state.products.map(function (product) {
-		            return (
-						<li className="col-md-4 col-sm-6 col-xs-12 center-xs">
-			            	<a href="#" title={product.title} onClick={() => self.addToCart(product.id)}>
-								<TablePhoto image={product.image} title={product.title} description={product.description} />
-								<Price currencyFormat={product.currencyFormat} price={product.price} />
-								<TableInstallments currencyFormat={product.currencyFormat} price={product.price} installments={product.installments} />
-							</a>
-						</li>
-		            );
-		        });
+			var productRows = this.state.products.map(function(product) {
+	            return (
+					<li className="col-md-4 col-sm-6 col-xs-12 center-xs">
+		            	<a href="#" title={product.title} onClick={() => this.addToCart(product.id)}>
+							<Photo image={config.dir_content + product.title.toSeo() + ".jpg"} title={product.title} description={product.description} />
+							<Title title={product.title} description={product.description} separator=" - "/>
+							<Price currencyFormat={product.currencyFormat} price={product.price} />
+							<Installments text="ou" currencyFormat={product.currencyFormat} price={product.price} installments={product.installments} />
+						</a>
+					</li>
+	            );
+			}.bind(this));
 
 			return (
 				<div className="shopping">
-					<section id="products" className="col-xs-12">
+					<section id="products" className="col-xs-12" onMouseMove={this.cartMouseMove}>
 						<ul className="row">
 							{productRows}
 						</ul>
 					</section>
-					<section id="cart" className="col-sm-12 col-md-8">
-						<ProductsCart product={this.state.product} />
-					</section>
+					<aside id="cart" className={this.state.cartClass} onMouseLeave={this.cartMouseLeave}>
+						<ProductsCart products={this.state.productsCart} list={this.state.list} totalPrice={this.state.totalPrice} totalQuantity={this.state.totalQuantity} onRemoveFromCart={this.removeFromCart} onSubmitPurchase={this.submitPurchase} />
+					</aside>
 				</div>
 			);
 		}
 	});
 
-	/*var TablePrice = React.createClass({
-		componentWillMount: function() {
-			var price = formatPrice.getObject(this.props.price);
-			this.setState({price: price});
-		},
+	var Photo = React.createClass({
 		render: function() {
-			return <p className="price">{this.props.currencyFormat} <strong>{this.state.price.int}</strong>,{this.state.price.float}</p>
+			return (
+				<figure>
+					<img src={this.props.image} alt={this.props.title} />
+				</figure>
+			);
 		}
-	});*/
+	});
+
+	var Title = React.createClass({
+		render: function() {
+			return (
+				<h4 className="title">{this.props.title + (this.props.description.trim() !== '' ? this.props.separator : '') + this.props.description}</h4>
+			);
+		}
+	});
 
 	var Price = React.createClass({
-		/*componentWillReceiveProps: function() {
-			var price = formatPrice.getObject(this.props.price);
-			console.log(price, this.props.quantity);
-			this.setState({price: price});
-		},
-		componentWillMount: function() {
-			console.log(2);
-			var price = formatPrice.getObject(this.props.price);
-			this.setState({price: price});
-		},*/
 		render: function() {
-			var price = formatPrice.getObject(this.props.price);
+			var price = formatPrice.getSplit(this.props.price);
 			return <p className="price">{this.props.currencyFormat} <strong>{price.int}</strong>,{price.float}</p>
 		}
 	});
 
-	var TablePhoto = React.createClass({
-		getInitialState: function() {
-			return {image: []};
-		},
-		componentWillMount: function() {
-			var image = dir_content + toSeo(this.props.title) + '.jpg';
-			this.setState({image: image});
-		},
+	var Installments = React.createClass({
 		render: function() {
-			return (
-				<figure>
-					<img src={this.state.image} alt={this.props.title} />
-					<figcaption className="description">{this.props.title} - {this.props.description}</figcaption>
-				</figure>
-			);
-		}
-	});
-
-	var TableInstallments = React.createClass({
-		getInitialState: function() {
-			return {installments: []};
-		},
-		componentWillMount: function() {
-			var installments = formatPrice.getInstallments(this.props.installments, this.props.price);
-			this.setState({installments: installments});
-		},
-		render: function() {
-			return <p className="installments">ou {this.props.installments} x <strong>{this.props.currencyFormat} {this.state.installments}</strong></p>
+			if (this.props.installments > 1) {
+				var installments = formatPrice.getInstallments(this.props.installments, this.props.price);
+				return <p className="installments">{this.props.text} {this.props.installments} x <strong>{this.props.currencyFormat} {installments}</strong></p>
+			} else {
+				return false;
+			};
 		}
 	});
 
 	var ProductsCart = React.createClass({
-		getInitialState: function() {
-			return {products: [], list: [], over: []};
-		},
-		mouseOver: function(e) {
-			e.setState({over: 'delete'});
-			//console.log(e.props.over);
-			//this.setState({over: 'delete'})
+		removeFromCart: function(id) {
+			this.props.onRemoveFromCart(id);
 		},
 		render: function() {
-			if (typeof this.props.product !== 'undefined') {
-
-				if (this.state.products.indexOf(this.props.product) == -1) {
-					this.state.list[this.props.product.id] = 1;
-					this.state.products.push(this.props.product);
-				} else {
-					this.state.list[this.props.product.id]++;
-				};
-
-				console.log(this.state.over);
-				var self = this,
-					cartRows = this.state.products.map(function (product) {
-					console.log('self', self.state.over);
-		            return (
-		            	<li className="row middle-xs {self.state.over}">
-							<hr />
-							<div className="col-xs-9 start-xs">
-								<CartPhoto image={product.image} title={product.title} />
-								<h4 className="title">{product.title} {product.description} {self.props.over}</h4>
-								<p className="size">{product.availableSizes.join(' ')} | {product.style}</p>
-								<p className="quantity">Quantidade: {self.state.list[product.id]}</p>
-							</div>
-							<div className="col-xs-3 end-xs">
-								<a href="#" className="close ico-cancel33" onMouseOver={() => self.mouseOver(self)}></a>
-								<Price currencyFormat={product.currencyFormat} price={product.price * self.state.list[product.id]} />
-							</div>
-						</li>
-		            );
-		        });
-			};
+			var cartRows = this.props.products.map(function(product) {
+	            return (
+	            	<CartRow product={product} quantity={this.props.list['p-' + product.id]} onClick={this.removeFromCart} onMouseOver={this.deleteState}/>
+	            );
+	        }.bind(this));
 
 			return (
-				<aside>
-					<h3 className="cart-title"><span className="bag">3</span>Sacola</h3>
+				<form className="col-xs-12" role="form" onSubmit={this.props.onSubmitPurchase}>
+					<h3 className="cart-title"><span className="bag"><div className="total">{this.props.totalQuantity}</div></span>Sacola</h3>
 					<ul>
 						{cartRows}
-						<CartConclude />
+						<CartConclude totalPrice={this.props.totalPrice} />
 					</ul>
-				</aside>
+				</form>
 			);
 		}
 	});
 
-	var CartPhoto = React.createClass({
+	var CartRow = React.createClass({
 		getInitialState: function() {
-			return {image: []};
+			return {deleteClass: []};
 		},
-		componentWillMount: function() {
-			var image = dir_content + toSeo(this.props.title) + '_thumb.jpg';
-			this.setState({image: image});
+		removeFromCart: function(id) {
+			this.props.onClick(id);
+		},
+		deleteState: function(className) {
+			className = className || '';
+			this.setState({deleteClass: className});
 		},
 		render: function() {
+			var product = this.props.product;
 			return (
-				<figure className="thumb">
-					<img src={this.state.image} alt={this.props.title} />
-				</figure>
+				<li className={"row middle-xs " + this.state.deleteClass}>
+					<hr />
+					<div className="col-xs-12 col-sm-9 start-sm">
+						<Photo image={config.dir_content + product.title.toSeo() + "_thumb.jpg"} title={product.title} description={product.description} />
+						<Title title={product.title} description={product.description} separator=" " />
+						<CartSize availableSizes={product.availableSizes} style={product.style} />
+						<CartQuantity quantity={this.props.quantity} />
+					</div>
+					<div className="col-xs-12 col-sm-3 end-xs">
+						<CartDelete onRemoveFromCart={() => this.removeFromCart(product.id)} onMouseOver={() => this.deleteState('delete')} onMouseOut={this.deleteState} />
+						<Price currencyFormat={product.currencyFormat} price={product.price * this.props.quantity} />
+					</div>
+				</li>
+			);
+		}
+	});
+
+	var CartSize = React.createClass({
+		render: function() {
+			return (
+				<p className="size">{this.props.availableSizes.join(' ')} | {this.props.style}</p>
+			);
+		}
+	});
+
+	var CartQuantity = React.createClass({
+		render: function() {
+			return (
+				<p className="quantity">Quantidade: {this.props.quantity}</p>
+			);
+		}
+	});
+
+	var CartDelete = React.createClass({
+		render: function() {
+			return (
+				<a href="#" className="close ico-cancel33" onClick={this.props.onRemoveFromCart} onMouseOver={this.props.onMouseOver} onMouseOut={this.props.onMouseOut}></a>
 			);
 		}
 	});
@@ -219,15 +308,23 @@
 			return (
 				<li className="row conclude">
 					<hr />
-					<p className="subtotal col-xs-6 start-xs">Subtotal</p>
-					<div className="col-xs-6 end-xs">
-						<p className="total-price">R$ <strong>379</strong>,70</p>
-						<p className="total-installments">ou em até 10 X <strong>R$ 37,97</strong></p>
+					<p className="subtotal col-xs-12 col-sm-6 start-sm">Subtotal</p>
+					<div className="col-xs-12 col-sm-6 end-sm">
+						<Price currencyFormat={config.currencyFormat} price={this.props.totalPrice} />
+						<Installments text="ou em até" currencyFormat={config.currencyFormat} price={this.props.totalPrice} installments={config.total_installments} />
 					</div>
-					<div className="col-xs-12 btn-buy-container">
-						<input type="submit" className="btn-buy" value="Comprar" />
-					</div>
+					<CartSubmit />
 				</li>
+			);
+		}
+	});
+
+	var CartSubmit = React.createClass({
+		render: function() {
+			return (
+				<div className="col-xs-12 btn-buy-container">
+					<input type="submit" className="btn-buy" value="Comprar" />
+				</div>
 			);
 		}
 	});
@@ -236,116 +333,7 @@
 		<ProductsTable />,
 		document.getElementById('container')
 	);
-	</script>
-</head>
-<body class="col-xs-12">
-	<div class="row center-xs">
-		<div id="container">
-			<!--section id="products" class="col-xs-12">
-				<ul class="row">
-					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
-						<a href="#" title="Chuteira Nike">
-							<figure>
-								<img src="content/foto1.jpg" alt="Chuteira Nike" />
-								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
-							</figure>
-							<p class="price">R$ <strong>149</strong>,90</p>
-							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
-						</a>
-					</li>
-					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
-						<a href="#" title="Chuteira Nike">
-							<figure>
-								<img src="content/foto1.jpg" alt="Chuteira Nike" />
-								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
-							</figure>
-							<p class="price">R$ <strong>49</strong>,90</p>
-							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
-						</a>
-					</li>
-					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
-						<a href="#" title="Chuteira Nike">
-							<figure>
-								<img src="content/foto1.jpg" alt="Chuteira Nike" />
-								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
-							</figure>
-							<p class="price">R$ <strong>9</strong>,90</p>
-							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
-						</a>
-					</li>
-					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
-						<a href="#" title="Chuteira Nike">
-							<figure>
-								<img src="content/foto1.jpg" alt="Chuteira Nike" />
-								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
-							</figure>
-							<p class="price">R$ <strong>149</strong>,90</p>
-							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
-						</a>
-					</li>
-					<li class="col-md-4 col-sm-6 col-xs-12 center-xs">
-						<a href="#" title="Chuteira Nike">
-							<figure>
-								<img src="content/foto1.jpg" alt="Chuteira Nike" />
-								<figcaption class="description">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</figcaption>
-							</figure>
-							<p class="price">R$ <strong>149</strong>,90</p>
-							<p class="installments">ou 3 x <strong>R$ 25,00</strong></p>
-						</a>
-					</li>
 
-				</ul>
-			</section>
-			<section id="cart" class="col-sm-12 col-md-8">
-				<aside>
-					<h3 class="cart-title"><span class="bag">3</span>Sacola</h3>
-					<ul>
-						<li class="row middle-xs delete">
-							<hr>
-							<div class="col-xs-9 start-xs">
-								<figure class="thumb">
-									<img src="content/calcao-nike-corinthians_thumb.jpg" alt="Chuteira Nike" />
-								</figure>
-								<h4 class="title">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</h4>
-								<p class="size">GG | Preto e branco</p>
-								<p class="quantity">Quantidade: 2</p>
-							</div>
-							<div class="col-xs-3 end-xs">
-								<a href="#" class="close ico-cancel33"></a>
-								<p class="price">R$ <strong>149</strong>,90</p>
-							</div>
-						</li>
-						<li class="row middle-xs">
-							<hr>
-							<div class="col-xs-9 start-xs">
-								<figure class="thumb">
-									<img src="content/calcao-nike-strike-lgr-woven_thumb.jpg" alt="Chuteira Nike" />
-								</figure>
-								<h4 class="title">Chuteira Nike Mercurial Victory 3 FG - Edição Especial Infantil</h4>
-								<p class="size">GG | Preto e branco</p>
-								<p class="quantity">Quantidade: 2</p>
-							</div>
-							<div class="col-xs-3 end-xs">
-								<a href="#" class="close ico-cancel33"></a>
-								<p class="price">R$ <strong>149</strong>,90</p>
-							</div>
-						</li>
-						<li class="row conclude">
-							<hr>
-							<p class="subtotal col-xs-6 start-xs">Subtotal</p>
-							<div class="col-xs-6 end-xs">
-								<p class="total-price">R$ <strong>379</strong>,70</p>
-								<p class="total-installments">ou em até 10 X <strong>R$ 37,97</strong></p>
-							</div>
-							<div class="col-xs-12 btn-buy-container">
-								<input type="submit" class="btn-buy" value="Comprar" />
-							</div>
-						</li>
-					</ul>
-				</aside>
-			</section--
-		</div>
-	</div>
-	
+	</script>
 </body>
 </html>
