@@ -36,6 +36,7 @@ Used the node module http-server
 Done with LocalStorage React module
 
 * Test your code;
+Began to implement Jasmine with Karma Test Runner on http://localhost:8080/front-end-recruitment/test.html but time is over
 
 * Instructions on how to build/run the project.
 
