@@ -1759,6 +1759,12 @@ body {
   -ms-transition: all 0.5 ease;
   -o-transition: all 0.5 ease;
   transition: all 0.5 ease;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   height: 100%;
   overflow: hidden;
   right: 0;
@@ -1766,20 +1772,20 @@ body {
   top: 0;
   width: 1px;
 }
-/* line 11, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000311}}
+/* line 12, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000312}}
 #cart.open {
   box-shadow: -2px 0px 1px #999;
   width: 66.66%;
 }
-/* line 15, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000315}}
+/* line 16, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000316}}
 #cart form {
   background-color: #202025;
   height: 100%;
 }
-/* line 20, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000320}}
+/* line 21, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000321}}
 #cart .cart-title {
   font-family: 'Open Sans', sans-serif;
   font-weight: 700;
@@ -1789,8 +1795,8 @@ body {
   padding-top: 40px;
   text-transform: uppercase;
 }
-/* line 28, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000328}}
+/* line 29, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000329}}
 #cart .cart-title .bag {
   background: url('../img/bag.svg') 0 0 no-repeat;
   display: inline-block;
@@ -1800,8 +1806,8 @@ body {
   width: 34px;
   top: 8px;
 }
-/* line 37, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000337}}
+/* line 38, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000338}}
 #cart .cart-title .bag .total {
   font-family: 'Open Sans', sans-serif;
   font-weight: 700;
@@ -1812,18 +1818,19 @@ body {
   display: inline-block;
   font-size: 12px;
   height: 20px;
+  line-height: 20px;
   position: absolute;
   right: -6px;
   width: 20px;
 }
-/* line 52, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000352}}
+/* line 54, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000354}}
 #cart li {
   padding-bottom: 1rem;
   text-align: left;
 }
-/* line 56, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000356}}
+/* line 58, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000358}}
 #cart li:not(.conclude) {
   -webkit-transition: 200ms;
   -moz-transition: 200ms;
@@ -1837,23 +1844,23 @@ body {
   transition: all 0.5 ease;
   cursor: pointer;
 }
-/* line 60, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000360}}
+/* line 62, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000362}}
 #cart li:not(.conclude):hover {
   background-color: #131316;
 }
-/* line 63, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000363}}
+/* line 65, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000365}}
 #cart li:not(.conclude):hover .close {
   color: white;
 }
-/* line 67, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000367}}
+/* line 69, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000369}}
 #cart li:not(.conclude).delete {
   background-color: #131316;
 }
-/* line 70, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000370}}
+/* line 72, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000372}}
 #cart li:not(.conclude).delete figure {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=(50));
@@ -1861,8 +1868,8 @@ body {
   -moz-opacity: 0.5;
   opacity: 0.5;
 }
-/* line 73, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000373}}
+/* line 75, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000375}}
 #cart li:not(.conclude).delete .title,
 #cart li:not(.conclude).delete .size,
 #cart li:not(.conclude).delete .quantity,
@@ -1874,8 +1881,8 @@ body {
   opacity: 0.2;
   text-decoration: line-through;
 }
-/* line 77, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000377}}
+/* line 79, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000379}}
 #cart li:not(.conclude).delete .close {
   -webkit-transition: 200ms;
   -moz-transition: 200ms;
@@ -1889,8 +1896,8 @@ body {
   transition: all 0.5 ease;
   color: white;
 }
-/* line 83, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000383}}
+/* line 85, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000385}}
 #cart li hr {
   margin: 0 1rem 1rem;
   background-color: #131316;
@@ -1898,8 +1905,8 @@ body {
   height: 2px;
   width: 100%;
 }
-/* line 91, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000391}}
+/* line 93, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000393}}
 #cart figure,
 #cart .title,
 #cart .size,
@@ -1916,14 +1923,14 @@ body {
   -o-transition: all 0.5 ease;
   transition: all 0.5 ease;
 }
-/* line 94, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000394}}
+/* line 96, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000396}}
 #cart figure {
   float: left;
   margin-right: 1rem;
 }
-/* line 98, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\0000398}}
+/* line 100, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003100}}
 #cart .title {
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
@@ -1931,8 +1938,8 @@ body {
   font-size: 14px;
   line-height: 18px;
 }
-/* line 104, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003104}}
+/* line 106, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003106}}
 #cart .size,
 #cart .quantity {
   font-family: 'Open Sans', sans-serif;
@@ -1940,53 +1947,53 @@ body {
   color: #999;
   font-size: 12px;
 }
-/* line 109, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003109}}
+/* line 111, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003111}}
 #cart .price {
   color: #dfbd00;
   font-size: 14px;
   margin-top: 10px;
 }
-/* line 114, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003114}}
+/* line 116, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003116}}
 #cart .price strong {
   font-family: 'Open Sans', sans-serif;
   font-weight: 700;
 }
-/* line 118, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003118}}
+/* line 120, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003120}}
 #cart .subtotal {
   color: #999;
   font-size: 14px;
   margin-top: 14px;
   text-transform: uppercase;
 }
-/* line 125, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003125}}
+/* line 127, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003127}}
 #cart .conclude .price {
   color: #dfbd00;
   font-size: 24px;
 }
-/* line 129, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003129}}
+/* line 131, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003131}}
 #cart .conclude .price strong {
   font-family: 'Open Sans', sans-serif;
   font-weight: 700;
 }
-/* line 133, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003133}}
+/* line 135, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003135}}
 #cart .conclude .installments {
   color: #999;
   font-size: 12px;
   text-transform: uppercase;
 }
-/* line 139, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003139}}
+/* line 141, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003141}}
 #cart .btn-buy-container {
   margin-top: 30px;
 }
-/* line 142, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003142}}
+/* line 144, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003144}}
 #cart .btn-buy {
   font-family: 'Open Sans', sans-serif;
   font-weight: 700;
@@ -2010,8 +2017,8 @@ body {
   text-transform: uppercase;
   width: 100%;
 }
-/* line 155, css\less\cart.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003155}}
+/* line 157, css\less\cart.less */
+@media -sass-debug-info{filename{font-family:file\:\/\/css\/less\/cart\.less}line{font-family:\00003157}}
 #cart .btn-buy:hover {
   color: #999;
   padding: 13px 0 11px;

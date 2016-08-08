@@ -2,6 +2,7 @@ module.exports = function(grunt) {
     "use strict";
 
     require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
+   	//grunt.loadNpmTasks('grunt-karma');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
@@ -25,6 +26,23 @@ module.exports = function(grunt) {
             
         },
 
+		/*karma: {
+			unit: {
+				configFile: 'karma.conf.js',
+				autoWatch : true,
+				port      : 9999,
+				background: true,
+				singleRun : true,
+				browsers  : ['Chrome'],
+				logLevel  : 'ERROR',
+				files: [
+					{
+						src: ["<%= dirs.js.dest %>/test/*.js"]
+					}
+				]
+			}
+		},*/
+
         jshint: {
             options: {
                 jshintrc: "<%= dirs.js.src %>/.jshintrc"
@@ -41,31 +59,17 @@ module.exports = function(grunt) {
 
                     separator : "\n\n"
                 },
-            frameworks: { 
-                src       : [
-                    "<%= dirs.js.src %>/plugins/zepto.min.js"
-                    //"<%= dirs.js.src %>/bower_components/react/react.min.js",
-                    //"<%= dirs.js.src %>/bower_components/react/react.dom.min.js"
-                ],
-                dest      : "<%= dirs.js.src %>/frameworks.js"  
-            },
-            /*netshoes: {
+            
+            netshoes: {
                 src       : [
                     "<%= dirs.js.src %>/app*.js"
                 ],
                 dest      : "<%= dirs.js.src %>/netshoes.js"
-            }*/
+            }
         },
 
         //Minificar JS
         uglify: {
-
-            /*options                 : {
-
-                mangle              : {
-                    except          : ["Swiper", "Zepto"] //no Array abaixo, podemos ignorar algumas variaveis.
-                }
-            },*/
             prod                    : {
                 options             : {
                     banner          : "/*! <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today('yyyy-mm-dd') %> */",
@@ -79,8 +83,7 @@ module.exports = function(grunt) {
                     }
                 },
                 files               : {
-                    "<%= dirs.js.dest %>/netshoes.min.js": ["<%= dirs.js.temp %>/netshoes.log.js"],
-                    "<%= dirs.js.dest %>/frameworks.min.js": ["<%= dirs.js.src %>/frameworks.js"]
+                    "<%= dirs.js.dest %>/netshoes.min.js": ["<%= dirs.js.temp %>/netshoes.log.js"]
                 }
             },
         },
@@ -210,6 +213,10 @@ module.exports = function(grunt) {
                     livereload: false
                 }
             },
+            /*karma: {
+				files: ["<%= dirs.js.dest %>/test/*.js"],
+				tasks: ['karma:unit:run'] //NOTE the :run flag
+			}*/
         },
 
         //browserSync
@@ -237,7 +244,7 @@ module.exports = function(grunt) {
     grunt.registerTask("build", ["sprite","less:dev","less:prod","js"]);
     grunt.registerTask("w", ["build","watch"]);
     grunt.registerTask("css", ["less"]);
-    grunt.registerTask("frameworks", ["concat:frameworks"]);
     grunt.registerTask("js", ["removelogging","uglify"]);
     grunt.registerTask("default", ["build"]);
+    //grunt.registerTask("karma", ["karma:unit:run"]);
 }
